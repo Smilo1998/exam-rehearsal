@@ -1,46 +1,47 @@
 import exercise1.Book;
 import exercise1.BookLocation;
 import exercise2.TextBook;
+import exercise3.DuplicateBookException;
+import exercise3.Library;
+import exercise4.SearchByAuthor;
+import exercise4.SearchByTitle;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        // Lav en BookLocation
-        BookLocation location1 = new BookLocation("A", 3);
-        BookLocation location2 = new BookLocation("B", 1);
 
-        // Lav en normal Book
-        Book book = new Book("12345", "Clean Code", "Robert C. Martin", location1);
+        BookLocation locA1 = new BookLocation("A", 1);
+        BookLocation locA2 = new BookLocation("A", 2);
 
-        // Lav en TextBook
-        TextBook textBook = new TextBook(
-                "98765",
-                "Advanced Mathematics",
-                "John Doe",
-                location2,
-                "Mathematics"
-        );
+        Book b1 = new Book("111", "Clean Code", "Robert Martin", locA1);
+        Book b2 = new Book("222", "Effective Java", "Joshua Bloch", locA1);
+        Book b3 = new TextBook("333", "Algorithms", "Sedgewick", locA2, "Computer Science");
 
-        System.out.println("Normal Book:");
-        System.out.println(book);
+        Library library = new Library(new SearchByTitle());
 
-        System.out.println("\nTextBook:");
-        System.out.println(textBook);
+        library.addBook(b1);
+        library.addBook(b2);
+        library.addBook(b3);
 
-        // Test: Book må gerne flyttes
-        System.out.println("\nFlytter normal bog...");
-        book.setLocation(location2);
-        System.out.println(book);
+        System.out.println("=== Søgning efter titel: 'Clean Code' ===");
+        System.out.println(library.search("Clean Code"));
 
-        // Test: TextBook må IKKE flyttes
-        System.out.println("\nPrøver at flytte TextBook...");
+        library.setSearchStrategy(new SearchByAuthor());
+
+        System.out.println("\n=== Søgning efter author: 'Sedgewick' ===");
+        System.out.println(library.search("Sedgewick"));
+
+        System.out.println("\n=== Test for duplikat ISBN ===");
         try {
-            textBook.setLocation(location1);
-        } catch (UnsupportedOperationException e) {
-            System.out.println("Error: " + e.getMessage());
+            library.addBook(new Book("111", "Another Book", "Someone Else", locA1));
+        } catch (DuplicateBookException e) {
+            System.out.println("Exception: " + e.getMessage());
         }
 
-        System.out.println(textBook);
+        System.out.println("\n=== Test at TextBook ikke kan flyttes ===");
+        try {
+            b3.setLocation(locA1);     // Skal kaste exception
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
     }
 }

@@ -2,14 +2,21 @@ package exercise3;
 
 import exercise1.Book;
 import exercise1.BookLocation;
+import exercise4.SearchStrategy;
 
 import java.util.*;
 
 public class Library {
     private HashMap<String , Book> bookSet;
+    private SearchStrategy searchStrategy;
 
-    public Library() {
+    public Library(SearchStrategy searchStrategy) {
         this.bookSet = new HashMap<>();
+        this.searchStrategy = searchStrategy;
+    }
+
+    public void setSearchStrategy(SearchStrategy searchStrategy) {
+        this.searchStrategy = searchStrategy;
     }
 
     public void addBook(Book book) {
@@ -28,10 +35,7 @@ public class Library {
         return bookSet.remove(book.getIsbn(), book);
     }
 
-    public Collection<Book> findBooksAtLocation(BookLocation location) {
-        return bookSet.values()
-                .stream()
-                .filter(book -> book.getLocation().equals(location))
-                .toList();
+    public Collection<Book> search(String query) {
+        return searchStrategy.search(query, bookSet.values());
     }
 }
