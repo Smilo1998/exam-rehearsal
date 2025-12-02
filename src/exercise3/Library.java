@@ -29,10 +29,20 @@ public class Library {
         }
 
         bookSet.put(book.getIsbn(), book);
+
+        BookLocation location = book.getLocation();
+        location.update(book, true);
     }
 
     public boolean removeBook(Book book) {
-        return bookSet.remove(book.getIsbn(), book);
+        boolean removed = bookSet.remove(book.getIsbn(), book);
+
+        if (removed) {
+            BookLocation location = book.getLocation();
+            location.update(book, false);
+        }
+
+        return removed;
     }
 
     public Collection<Book> search(String query) {

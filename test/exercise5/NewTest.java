@@ -1,13 +1,16 @@
+package exercise5;
+
 import exercise1.Book;
 import exercise1.BookLocation;
-import exercise2.TextBook;
-import exercise3.DuplicateBookException;
 import exercise3.Library;
-import exercise4.SearchByAuthor;
 import exercise4.SearchByTitle;
+import org.junit.Test;
 
-public class Main {
-    public static void main(String[] args) {
+import static org.junit.Assert.assertEquals;
+
+public class NewTest {
+    @Test
+    public void testObserver() {
         BookLocation locA1 = new BookLocation("A", 1);
 
         Book b1 = new Book("111", "Clean Code", "Robert Martin", locA1);
@@ -18,11 +21,10 @@ public class Main {
         lib.addBook(b1);
         lib.addBook(b2);
 
-        System.out.println("Bøger på A1: " + locA1.getBooks());
+        assertEquals(2, locA1.getBooks().size());
 
         lib.removeBook(b1);
 
-        System.out.println("Efter fjernelse: " + locA1.getBooks());
-
+        assertEquals(1, locA1.getBooks().size());
     }
 }
